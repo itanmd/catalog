@@ -10,11 +10,49 @@
 </head>
 <body>
    <?php 
-   $customer_name = "Big Store";
+   $customer_name = "80's Store";
    $catalog_num = "1";
    $updates = true;
-   $last_update = "22/11/2022";
+   $time = time();
+    $last_update = date('d/m/Y', $time);
    $store_rating = rand(1, 5);
+
+   //trending products
+   $trending_prods = [
+    [
+        'name' => 'Product 1',
+        'price' => 54,
+        'description' => 'Very nice product',
+        'image' => 'https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708__340.jpg'
+
+    ],
+    [
+        'name' => 'Product 2',
+        'price' => 33,
+        'description' => 'Ok',
+        'image' => 'product2.jpg'
+
+    ],
+    [
+        'name' => 'Product 3',
+        'price' => 108,
+        'description' => 'Expansive',
+        'image' => 'product3.jpg'
+
+    ],
+]; 
+
+// offers
+$offers = [
+    [
+        'title' => 'available now!',
+        'text' => 'buy now before the offer expire'
+    ],
+    [
+        'title' => '2 in the price of 1',
+        'text' => 'excellent'
+    ]
+];
 
    function store_rating_txt($rating) {
     switch ($rating) {
@@ -34,9 +72,21 @@
             break;
     } 
    }
+
+   $search = '';
+
+   if( isset($_POST['submit']) ){
+   
+    if( ! empty($_POST['search']) ){
+       
+      echo 'You search for: ' . $_POST['search'];
+       
+    }
+     
+  }
    ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">The Sport Catalog</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,55 +98,95 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                <form method="POST" action="" class="d-flex">
+                    <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit" value="search">Search</button>
                 </form>
             </div>
         </div>
     </nav> 
-    
-    <h5>
-       
 
-        <span class="badge bg-info text-dark">
-            <?php echo "$store_rating"; 
-            echo ($store_rating === 1) ? ' Star' : ' Stars';
-            ?>
-
-        </span>
-        
-        <?= store_rating_txt($store_rating)?>
-
+    <main class="px-4"> 
         <?php 
-        $i =1; 
-        while ($i<=5) {
-            echo "<li> Item # $i</li>";
-            $i++;
+        if($search) {
+            echo "<div class=\"text-info\">$search</div>";
         }
-        
         ?>
-    </h5>
+        <h5>
+            <span class="badge bg-info text-dark">
+                <?php echo "$store_rating"; 
+                echo ($store_rating === 1) ? ' Star' : ' Stars';
+                ?>
+
+            </span>
+            
+            <?= store_rating_txt($store_rating)?>
+
+            
+        </h5>
+
+        <p>
+            <?php 
+            echo $customer_name;
+            ?>
+        </p>
+
+        <h4>Trending Products</h4>
+
+        <div class="row">
+        
+            <?php
+        
+            foreach($trending_prods as $prod) {
+                $col = <<<COL
+                <div class="col">
+                 <div class="card">
+                    <img src="{$prod['image']}" class="card-img-top" alt="{$prod['name']}">
+                    <div class="card-body">
+                        <h5 class="card-title">{$prod['name']}</h5>
+                        <h6 class="card-text">\${$prod['price']}</h6>
+                        <p class="card-text">{$prod['description']}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                 </div>
+                </div>
+                COL;
+                echo $col;
+            }
+            
+
+            ?>
+        </div>
+
+        <hr>
+
+        <h4>Our Special Offers</h4>
+
+        <div class="row">
+            <?php
+            foreach ($offers as $offer) {
+                $col = <<<COL
+                        <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{$offer['title']}</h5>
+                                <p class="card-text">{$offer['text']}</p>
+                                <a href="#" class="btn btn-primary">Get It</a>
+                            </div>
+                        </div>
+                    </div>
+                    COL;
+
+                echo $col;
+            }
+            ?>
+        </div>
 
 
+        
 
-   <p>
-    <?php 
-    echo $customer_name;
-    ?>
-   </p>
+    </main>
 
-   <ul>
-    <li><?php echo $catalog_num ?></li>
-    <li><?php echo $updates ?></li>
-    <li><?php echo $last_update ?></li>
-   </ul>
-
-   <p>
-    <?php 
-    echo date('d/m/y');
-    ?>
-   </p>
 
 </body>
 </html>
